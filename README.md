@@ -16,6 +16,11 @@ The Mesh - Decal Road Convert extension can be used for the following purposes:
 
 Check this forum post for more information: https://www.beamng.com/threads/release-world-editor-extension-mesh-decal-road-convert.92927/
 
+### Changelog
+
+* 1.0: Initial release
+* 1.1: Added possibility for converting multiple roads at once (select all in the editor, click the select button in the window and convert)
+
 ## Road-edge Generator
 
 The Road-edge Generator extension does as it same says:
@@ -25,6 +30,26 @@ The Road-edge Generator extension does as it same says:
 
 Check this forum post for more information: https://www.beamng.com/threads/release-world-editor-extension-road-edge-generator.98175/
 
+### Changelog
+
+
+* 1.0: Initial release
+* 1.1: Small update:
+  - Added start fade and end fade parameters
+  - Added option to randomise node placement
+  - Clarified tooltips and interface
+  - Road-edge width can now be a decimal value
+* 1.2: Small update:
+  - Added option to specify texture length
+  - Fixed startFade & endFade numbers being merged together for only the startFade property for number higher than 1.0
+* 1.3: Small update:
+  - Added "overObjects" option
+* 1.4: QoL update:
+  - Added loading and saving of profiles
+  - Profiles are saved in your userfolder/settings
+* 1.5: Bugfix update:
+  - Fixed saved profiles not loading properly
+
 ## Road Terrain/Material Painter
 
 The Road Material Painter extension has these functions:
@@ -33,6 +58,11 @@ The Road Material Painter extension has these functions:
 - Includes terraforming features to blend terrain with road geometry.
 
 Check this forum post for more information: https://www.beamng.com/threads/release-world-editor-extension-road-terrain-material-painter.106566/
+
+### Changelog
+
+* 1.0: Initial release
+* 1.1: Added terraforming
 
 # Installation
 
