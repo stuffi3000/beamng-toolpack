@@ -69,9 +69,9 @@ Check this forum post for more information: https://www.beamng.com/threads/relea
 
 To install these extensions, follow these steps:
 1. Download the repository as a .zip file
-2.1. Open up the file and place it's content into your userfolder.
-2.2. Alternatively, open up the file and place its content into your BeamNG.drive root directory (can be easily found by right-clicking on BeamNG Drive in Steam -> Manage -> Browse local files): Place the lua folder where the lua folder is.
-2.3. Alternatively, navigate through all folders in the .zip attached and place the .lua files in BeamNG.drive\lua\ge\extensions\editor.
+2. Open up the file and place it's content into your userfolder.
+3. **Alternatively**, open up the file and place its content into your BeamNG.drive root directory (can be easily found by right-clicking on BeamNG Drive in Steam -> Manage -> Browse local files): Place the lua folder where the lua folder is.
+4. **Alternatively**, navigate through all folders in the .zip attached and place the .lua files in BeamNG.drive\lua\ge\extensions\editor.
 
 Once done, all extensions should automatically show up in your editor under Window -> <Name of the extension\>.
 
