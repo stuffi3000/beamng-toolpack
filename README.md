@@ -1,6 +1,7 @@
 # BeamNG.drive World Editor Community Toolpack
 
 A collection of extensions for the BeamNG.drive World Editor, designed to streamline and enhance map editing workflows. This toolpack aims to provide map creators with powerful utilities for road generation, conversion, and terrain painting.
+
 The extensions contained in this toolpack were first written by Stuffi3000.
 
 # Included Extensions
@@ -68,13 +69,24 @@ Check this forum post for more information: https://www.beamng.com/threads/relea
 
 To install these extensions, follow these steps:
 1. Download the repository as a .zip file
-2. Open up the file and place it's content into your userfolder.
+2.1. Open up the file and place it's content into your userfolder.
+2.2. Alternatively, open up the file and place its content into your BeamNG.drive root directory (can be easily found by right-clicking on BeamNG Drive in Steam -> Manage -> Browse local files): Place the lua folder where the lua folder is.
+2.3. Alternatively, navigate through all folders in the .zip attached and place the .lua files in BeamNG.drive\lua\ge\extensions\editor.
 
-If you run into any issues, you can check one of the forum posts for more information and guidance.
+Once done, all extensions should automatically show up in your editor under Window -> <Name of the extension\>.
+
+If it doesn't show up:
+- Make sure you placed the .lua files in the right directory and no other software is blocking its execution
+- In your editor, go to Window -> Extensions Editor and check whenever the extensions are enabled
+- Restart BeamNG drive
+- As a last resort: post an issue here.
+
+If you run into any problems, you can check one of the forum posts for more information and guidance.
 
 # Contribution
 
 Contributions are very much welcome! These can be expansions of the existing tools or new useful tools to add to the toolpack. 
+
 I do nevertheless reserve myself the right to accept or deny the addition of new tools or the modification of existing extensions.
 
 # Licence
