@@ -1,4 +1,4 @@
-# Beamng.drive World Editor Community Toolpack
+# BeamNG.drive World Editor Community Toolpack
 
 A collection of extensions for the BeamNG.drive World Editor, designed to streamline and enhance map editing workflows. This toolpack aims to provide map creators with powerful utilities for road generation, conversion, and terrain painting.
 The extensions contained in this toolpack were first written by Stuffi3000.
