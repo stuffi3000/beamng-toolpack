@@ -24,7 +24,7 @@ Check this forum post for more information: https://www.beamng.com/threads/relea
 
 ## Road-edge Generator
 
-The Road-edge Generator extension does as it same says:
+The Road-edge Generator extension does as its name says:
 - Automatically generates road-edge DecalRoads alongside existing roads.
 - Supports customizable profiles, edge width, material, fade, randomization, and side selection.
 - Profile management for quick parameter switching and reuse.
