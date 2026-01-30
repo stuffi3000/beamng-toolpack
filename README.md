@@ -21,6 +21,7 @@ Check this forum post for more information: https://www.beamng.com/threads/relea
 
 * 1.0: Initial release
 * 1.1: Added possibility for converting multiple roads at once (select all in the editor, click the select button in the window and convert)
+* 1.2: Added feature to place origin of newly created roads at 0,0,0 + New roads will be named with "_decalRoad" and "_meshRoad" in an attempt to address new roads not always properly saving in the editor.
 
 ## Road-edge Generator
 
