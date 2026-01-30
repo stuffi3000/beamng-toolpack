@@ -19,6 +19,7 @@ local newMeshDepth = im.IntPtr(2)
 local copyAllPossible = im.BoolPtr(true)
 local copyMaterial = im.BoolPtr(true)
 local rebuildCollision = im.BoolPtr(false)
+local moveOriginToZero = im.BoolPtr(false)
 local meshRoadIds = {}
 local decalRoadIds = {}
 
@@ -76,12 +77,15 @@ local function onEditorGui()
     im.Checkbox("Rebuild Collision", rebuildCollision)
     im.tooltip("Rebuild collision after a new MeshRoad was created or an old one was deleted. Useful if collision is tested without closing the editor.\n(Default: disabled) (can cause lag)")
 
+    im.Checkbox("Move origin to 0,0,0", moveOriginToZero)
+    im.tooltip("When enabled, newly created MeshRoads/DecalRoads will have their origin at world position 0 0 0 while keeping all nodes in their original positions.")
 
     savedParams.newMeshDepth = newMeshDepth[0]
     savedParams.deleteOld = deleteOld[0]
     savedParams.copyAllPossible = copyAllPossible[0]
     savedParams.copyMaterial = copyMaterial[0]
     savedParams.rebuildCollision = rebuildCollision[0]
+    savedParams.moveOriginToZero = moveOriginToZero[0]
     im.NextColumn()
 
     im.Columns(2)
@@ -143,18 +147,34 @@ local function onEditorGui()
 
           local newDecalRoadId = editor.createRoad(newDecalNodes, {})
           local name, position, rotation, scale, material
+
+          -- Set naming convention for new DecalRoads
+          name = editor.getFieldValue(meshRoadId, "name")
+          if name and name ~= "" then
+            if not name:match("_decalRoad$") then
+              name = name .. "_decalRoad"
+            end
+          else
+            name = "DecalRoad_decalRoad"
+          end
+          editor.setFieldValue(newDecalRoadId, "name", name)
+
           if savedParams.copyAllPossible == false then
             position = editor.getFieldValue(meshRoadId, "position")
             rotation = editor.getFieldValue(meshRoadId, "rotation")
             scale = editor.getFieldValue(meshRoadId, "scale")
-            editor.setFieldValue(newDecalRoadId, "position", position)
+            if savedParams.moveOriginToZero ~= true then
+              editor.setFieldValue(newDecalRoadId, "position", position)
+            end
             editor.setFieldValue(newDecalRoadId, "rotation", rotation)
             editor.setFieldValue(newDecalRoadId, "scale", scale)
           end
-          name = editor.getFieldValue(meshRoadId, "name")
-          if name then
-            editor.setFieldValue(newDecalRoadId, "name", name)
+
+          -- Optionally move origin to (0,0,0) while keeping nodes in place
+          if savedParams.moveOriginToZero == true then
+            editor.setFieldValue(newDecalRoadId, "position", "0 0 0")
           end
+
           if savedParams.copyMaterial == true then
             material = editor.getFieldValue(meshRoadId, "topMaterial")
             editor.setFieldValue(newDecalRoadId, "Material", material)
@@ -239,14 +259,29 @@ local function onEditorGui()
             position = editor.getFieldValue(decalRoadId, "position")
             rotation = editor.getFieldValue(decalRoadId, "rotation")
             scale = editor.getFieldValue(decalRoadId, "scale")
-            editor.setFieldValue(newMeshRoadId, "position", position)
+            if savedParams.moveOriginToZero ~= true then
+              editor.setFieldValue(newMeshRoadId, "position", position)
+            end
             editor.setFieldValue(newMeshRoadId, "rotation", rotation)
             editor.setFieldValue(newMeshRoadId, "scale", scale)
           end
+
+          -- Set naming convention for new MeshRoads
           name = editor.getFieldValue(decalRoadId, "name")
-          if name then
-            editor.setFieldValue(newMeshRoadId, "name", name)
+          if name and name ~= "" then
+            if not name:match("_meshRoad$") then
+              name = name .. "_meshRoad"
+            end
+          else
+            name = "MeshRoad_meshRoad"
           end
+          editor.setFieldValue(newMeshRoadId, "name", name)
+
+          -- Optionally move origin to (0,0,0) while keeping nodes in place
+          if savedParams.moveOriginToZero == true then
+            editor.setFieldValue(newMeshRoadId, "position", "0 0 0")
+          end
+
           if savedParams.copyMaterial == true then
             material = editor.getFieldValue(decalRoadId, "Material")
             editor.setFieldValue(newMeshRoadId, "topMaterial", material)
