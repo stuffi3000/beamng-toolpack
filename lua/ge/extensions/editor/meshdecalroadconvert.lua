@@ -23,6 +23,39 @@ local moveOriginToZero = im.BoolPtr(false)
 local meshRoadIds = {}
 local decalRoadIds = {}
 
+-- Move a newly created road/mesh origin to world 0 0 0 while keeping all nodes in their original
+-- world positions.
+--
+-- Node positions exposed by getNodePosition()/editor.getNodes are treated as world space by the
+-- editor (see roadEditor.lua / meshEditor.lua). That means when we change the object's origin
+-- (position field), we must re-apply node positions so their world coordinates remain unchanged.
+local function moveOriginToZeroKeepNodes(objectId, desiredNodes)
+  if not objectId or not desiredNodes then return end
+  local obj = scenetree.findObjectById(objectId)
+  if not obj then return end
+
+  -- Set origin to world zero.
+  editor.setFieldValue(objectId, "position", "0 0 0")
+
+  -- Re-apply node properties (most importantly world positions).
+  for i, node in ipairs(desiredNodes) do
+    local nodeId = i - 1
+    if node.pos then
+      editor.setNodePosition(obj, nodeId, node.pos)
+    end
+    if node.width then
+      editor.setNodeWidth(obj, nodeId, node.width)
+    end
+    if node.depth and obj.setNodeDepth then
+      editor.setNodeDepth(obj, nodeId, node.depth)
+    end
+    if node.normal and obj.setNodeNormal then
+      obj:setNodeNormal(nodeId, node.normal)
+    end
+  end
+  editor.setDirty()
+end
+
 
 local function getSelection(classNames)
   local ids = {} -- Store multiple meshRoadIds in a table
@@ -140,6 +173,7 @@ local function onEditorGui()
         if meshRoadId then
           local oldMeshRoad = scenetree.findObjectById(meshRoadId)
           local newDecalNodes = editor.getNodes(oldMeshRoad)
+
           for _, v in pairs(newDecalNodes) do
             v["depth"] = nil
             v["normal"] = nil
@@ -172,7 +206,7 @@ local function onEditorGui()
 
           -- Optionally move origin to (0,0,0) while keeping nodes in place
           if savedParams.moveOriginToZero == true then
-            editor.setFieldValue(newDecalRoadId, "position", "0 0 0")
+            moveOriginToZeroKeepNodes(newDecalRoadId, newDecalNodes)
           end
 
           if savedParams.copyMaterial == true then
@@ -244,6 +278,7 @@ local function onEditorGui()
         if decalRoadId then
           local oldDecalRoad = scenetree.findObjectById(decalRoadId)
           local newMeshNodes = editor.getNodes(oldDecalRoad)
+
           if not newMeshDepth then
             newMeshDepth = 2
           end
@@ -279,7 +314,7 @@ local function onEditorGui()
 
           -- Optionally move origin to (0,0,0) while keeping nodes in place
           if savedParams.moveOriginToZero == true then
-            editor.setFieldValue(newMeshRoadId, "position", "0 0 0")
+            moveOriginToZeroKeepNodes(newMeshRoadId, newMeshNodes)
           end
 
           if savedParams.copyMaterial == true then
