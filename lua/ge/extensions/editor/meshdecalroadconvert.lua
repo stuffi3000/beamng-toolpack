@@ -56,6 +56,34 @@ local function moveOriginToZeroKeepNodes(objectId, desiredNodes)
   editor.setDirty()
 end
 
+local function getRoadBaseName(roadId, suffix, fallbackBase)
+  local name = editor.getFieldValue(roadId, "name")
+  if not name or name == "" then
+    local obj = scenetree.findObjectById(roadId)
+    if obj and obj.getName then
+      name = tostring(obj:getName())
+    end
+  end
+  if not name or name == "" then
+    name = fallbackBase
+  end
+  if not name:match(suffix .. "$") then
+    name = name .. suffix
+  end
+  return name
+end
+
+local function generateUniqueRoadName(baseName, objectIdToIgnore)
+  local uniqueName = baseName
+  local suffixIndex = 1
+  local existing = scenetree.findObject(uniqueName)
+  while existing and (not objectIdToIgnore or not existing.getID or existing:getID() ~= objectIdToIgnore) do
+    uniqueName = string.format("%s_%d", baseName, suffixIndex)
+    suffixIndex = suffixIndex + 1
+    existing = scenetree.findObject(uniqueName)
+  end
+  return uniqueName
+end
 
 local function getSelection(classNames)
   local ids = {} -- Store multiple meshRoadIds in a table
@@ -173,6 +201,7 @@ local function onEditorGui()
         if meshRoadId then
           local oldMeshRoad = scenetree.findObjectById(meshRoadId)
           local newDecalNodes = editor.getNodes(oldMeshRoad)
+          local requestedName = getRoadBaseName(meshRoadId, "_decalRoad", "DecalRoad")
 
           for _, v in pairs(newDecalNodes) do
             v["depth"] = nil
@@ -180,18 +209,7 @@ local function onEditorGui()
           end
 
           local newDecalRoadId = editor.createRoad(newDecalNodes, {})
-          local name, position, rotation, scale, material
-
-          -- Set naming convention for new DecalRoads
-          name = editor.getFieldValue(meshRoadId, "name")
-          if name and name ~= "" then
-            if not name:match("_decalRoad$") then
-              name = name .. "_decalRoad"
-            end
-          else
-            name = "DecalRoad_decalRoad"
-          end
-          editor.setFieldValue(newDecalRoadId, "name", name)
+          local position, rotation, scale, material
 
           if savedParams.copyAllPossible == false then
             position = editor.getFieldValue(meshRoadId, "position")
@@ -214,6 +232,7 @@ local function onEditorGui()
             editor.setFieldValue(newDecalRoadId, "Material", material)
           end
           editor.pasteFields(editor.copyFields(meshRoadId), newDecalRoadId)
+          editor.setFieldValue(newDecalRoadId, "name", generateUniqueRoadName(requestedName, newDecalRoadId))
 
           if savedParams.deleteOld == true then
             editor.deleteMesh(meshRoadId)
@@ -278,6 +297,7 @@ local function onEditorGui()
         if decalRoadId then
           local oldDecalRoad = scenetree.findObjectById(decalRoadId)
           local newMeshNodes = editor.getNodes(oldDecalRoad)
+          local requestedName = getRoadBaseName(decalRoadId, "_meshRoad", "MeshRoad")
 
           if not newMeshDepth then
             newMeshDepth = 2
@@ -289,7 +309,7 @@ local function onEditorGui()
           end
 
           local newMeshRoadId = editor.createMesh("MeshRoad", newMeshNodes, {})
-          local name, position, rotation, scale, material
+          local position, rotation, scale, material
           if savedParams.copyAllPossible == false then
             position = editor.getFieldValue(decalRoadId, "position")
             rotation = editor.getFieldValue(decalRoadId, "rotation")
@@ -301,17 +321,6 @@ local function onEditorGui()
             editor.setFieldValue(newMeshRoadId, "scale", scale)
           end
 
-          -- Set naming convention for new MeshRoads
-          name = editor.getFieldValue(decalRoadId, "name")
-          if name and name ~= "" then
-            if not name:match("_meshRoad$") then
-              name = name .. "_meshRoad"
-            end
-          else
-            name = "MeshRoad_meshRoad"
-          end
-          editor.setFieldValue(newMeshRoadId, "name", name)
-
           -- Optionally move origin to (0,0,0) while keeping nodes in place
           if savedParams.moveOriginToZero == true then
             moveOriginToZeroKeepNodes(newMeshRoadId, newMeshNodes)
@@ -322,6 +331,7 @@ local function onEditorGui()
             editor.setFieldValue(newMeshRoadId, "topMaterial", material)
           end
           editor.pasteFields(editor.copyFields(decalRoadId), newMeshRoadId)
+          editor.setFieldValue(newMeshRoadId, "name", generateUniqueRoadName(requestedName, newMeshRoadId))
 
           if savedParams.deleteOld == true then
             editor.deleteRoad(decalRoadId)
